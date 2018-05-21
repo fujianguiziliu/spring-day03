@@ -14,50 +14,17 @@
     http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-
-<!-- 配置事务管理 -->
+	<!-- 引入DI扫描器 -->
+	<context:annotation-config/>
+	<!-- 引入Ioc扫描器 -->
+	<context:component-scan base-package="com._520it._03_tx_anno.dao,com._520it._03_tx_anno.service"/>
+		<!--  事务注解的驱动-->
+		<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- 配置事务管理 -->
 	<bean id="transactionManager" 
 	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-
-<!--配置事务的相关性属性:增强what
-	transaction-manager:指定对哪一个事务管理器的配置
-	id：用来在其他地方引用的标识
-	环绕通知：when
-  -->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-		<!--默认是read-only="false"-->
-			<!-- 针对每个方法进行事务的管理配置 -->
-			<tx:method name="get*" read-only="true"/>
-			<tx:method name="list*" read-only="true"/>
-				<!--如果数据库支持 SERIALIZABLE，就直接使用数据库支持的来实现，反之就用spring自己的方式来实现 -->
-			<tx:method name="query*" read-only="true" isolation="SERIALIZABLE"/>
-			<tx:method name="*" />
-		</tx:attributes>
-	
-	
-	</tx:advice>
-	<!--when/what/where  -->
-	<aop:config>
-	<aop:pointcut expression="execution(* com._520it._02_tx.service.*.*(..))" id="pc"/>
-	<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
-	</aop:config>
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
 	<!--加载db.properties文件  -->
 	<context:property-placeholder location="db.properties"/>
 	<!-- 配置连接池对象 -->
@@ -67,15 +34,7 @@
 	p:username="${db.username}"
 	p:password="${db.password}">
 	</bean>
-	<bean id="baseBean" abstract="true">
-				<property name="dataSource" ref="dataSource"></property>		
-	</bean>
-	<bean id="accountDAO" class="com._520it._02_tx.dao.impl.AccountDAOImpl"
-	parent="baseBean">
-	</bean>
-	<bean id="accountService" class="com._520it._02_tx.service.impl.AccountServiceImpl">
-		<property name="accountDAO" ref="accountDAO"></property>
-	</bean>
+	
 	
 
 </beans>

@@ -1,13 +1,19 @@
-package com._520it._02_tx.service.impl;
+package com._520it._03_tx_anno.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 
 import com._520it._02_tx.dao.IAccountDAO;
 import com._520it._02_tx.service.IAccountService;
 
+@Service
+@Transactional
 public class AccountServiceImpl implements IAccountService {
 
-	@Setter
+	@Autowired
 	private IAccountDAO accountDAO;
 	@Override
 	public void trans(Long inId, Long outId, Double money) {
